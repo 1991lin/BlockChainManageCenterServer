@@ -1,6 +1,6 @@
-package com.blockchain.manager.engine;
+package com.blockchain.manager.engine.server;
 
-import com.blockchain.manager.engine.handler.SimpleClientHandler;
+import com.blockchain.manager.engine.server.handler.SimpleClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;

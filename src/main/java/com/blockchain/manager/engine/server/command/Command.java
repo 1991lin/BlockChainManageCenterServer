@@ -1,4 +1,4 @@
-package com.blockchain.manager.engine.command;
+package com.blockchain.manager.engine.server.command;
 
 
 /**

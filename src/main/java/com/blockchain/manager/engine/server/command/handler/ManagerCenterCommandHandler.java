@@ -1,4 +1,4 @@
-package com.blockchain.manager.engine.command.handler;
+package com.blockchain.manager.engine.server.command.handler;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOutboundHandlerAdapter;
