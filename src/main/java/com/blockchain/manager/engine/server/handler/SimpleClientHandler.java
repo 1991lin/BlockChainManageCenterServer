@@ -39,7 +39,9 @@ public class SimpleClientHandler implements ChannelInboundHandler{
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         //sent the message to server side.
         ByteBuf byteBuf = Unpooled.copiedBuffer(initMessage.getBytes(StandardCharsets.UTF_8));
+
         ctx.writeAndFlush(byteBuf);
+
     }
 
     @Override

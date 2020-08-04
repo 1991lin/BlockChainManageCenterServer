@@ -30,19 +30,18 @@ public class SimpleServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        log.info("SimpleChannelHandler is Active");
+        log.info("Connection is created with " + ctx.channel().remoteAddress());
         super.channelActive(ctx);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        log.info("SimpleChannelHandler is Inactive");
+        log.info("Connection is inactive, client : " + ctx.channel().remoteAddress());
         super.channelInactive(ctx);
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        log.info("SimpleChannelHandler channelRead");
         getMessageFromClient(msg);
         sentResponse(ctx);
     }
@@ -63,26 +62,23 @@ public class SimpleServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
-        log.info("SimpleChannelHandler channelReadComplete");
         ctx.flush();
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        log.error("ExceptionCaught in the SimpleChannelHandler", cause);
         log.error("Exception caught : ", cause);
         ctx.close();
     }
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-        log.info("SimpleChannelHandler method: handlerAdded");
         super.handlerAdded(ctx);
     }
 
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
-        log.info("SimpleChannelHandler method: handlerRemoved");
+        log.info("client : " + ctx.channel().remoteAddress() + " is removed.");
         super.handlerRemoved(ctx);
     }
 }

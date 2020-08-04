@@ -1,5 +1,7 @@
 package com.blockchain.manager.engine.server;
 
+import com.blockchain.manager.engine.constant.Limitation;
+import com.blockchain.manager.engine.server.handler.HeartBeatServerHandler;
 import com.blockchain.manager.engine.server.handler.SimpleServerHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -9,7 +11,10 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author eric
@@ -36,6 +41,9 @@ public class ManagerCenterServer {
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
+                            ch.pipeline().addLast("ServerIdleStateChannel",
+                                    new IdleStateHandler(Limitation.READ_TIME, 0, Limitation.ALL_IDLE_TIME, TimeUnit.SECONDS));
+                            ch.pipeline().addLast(new HeartBeatServerHandler());
                             ch.pipeline().addLast(new SimpleServerHandler());
                         }
                     })
@@ -46,7 +54,6 @@ public class ManagerCenterServer {
         } catch (InterruptedException e) {
             log.error(e.getMessage(), e);
         } finally {
-
             boss.shutdownGracefully();
             worker.shutdownGracefully();
 

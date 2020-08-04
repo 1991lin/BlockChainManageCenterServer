@@ -1,6 +1,7 @@
 package com.blockchain.manager.engine.server;
 
-import com.blockchain.manager.engine.server.handler.HeartbeatHandler;
+import com.blockchain.manager.engine.constant.Limitation;
+import com.blockchain.manager.engine.server.handler.HeartBeatClientHandler;
 import com.blockchain.manager.engine.server.handler.SimpleClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -19,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
  **/
 
 @Slf4j
-public class MockClientServer {
+public class ManagerClientServer {
 
     public static void main(String[] arg) {
 
@@ -32,8 +33,9 @@ public class MockClientServer {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast("IdleStateHandler", new IdleStateHandler(30, 60, 0));
-                        ch.pipeline().addLast(new HeartbeatHandler());
+                        ch.pipeline().addLast("IdleStateHandler",
+                                new IdleStateHandler(0, Limitation.WRITE_TIME, Limitation.ALL_IDLE_TIME));
+                        ch.pipeline().addLast(new HeartBeatClientHandler());
                         ch.pipeline().addLast(new SimpleClientHandler());
                     }
                 });
