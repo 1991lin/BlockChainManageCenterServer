@@ -2,7 +2,6 @@ package com.blockchain.manager.engine.server;
 
 import com.blockchain.manager.engine.constant.Limitation;
 import com.blockchain.manager.engine.server.handler.HeartBeatClientHandler;
-import com.blockchain.manager.engine.server.handler.SimpleClientHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -33,10 +32,10 @@ public class ManagerClientServer {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast("IdleStateHandler",
+                        ch.pipeline().addLast("Ping",
                                 new IdleStateHandler(0, Limitation.WRITE_TIME, Limitation.ALL_IDLE_TIME));
                         ch.pipeline().addLast(new HeartBeatClientHandler());
-                        ch.pipeline().addLast(new SimpleClientHandler());
+                        //ch.pipeline().addLast(new SimpleClientHandler());
                     }
                 });
         ChannelFuture channelFuture = null;
