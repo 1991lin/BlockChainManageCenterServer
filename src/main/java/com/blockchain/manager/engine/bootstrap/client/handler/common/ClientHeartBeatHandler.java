@@ -17,7 +17,7 @@ import java.util.Date;
 @Slf4j
 public class ClientHeartBeatHandler extends ChannelInboundHandlerAdapter {
 
-    private int connection_to_server_time = 0;
+    private int timesOfConnections = 0;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -38,11 +38,10 @@ public class ClientHeartBeatHandler extends ChannelInboundHandlerAdapter {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             if (((IdleStateEvent) evt).state().equals(IdleState.WRITER_IDLE)) {
-                if (connection_to_server_time <= Limitation.MAX_LOST_CONNECTION_LIMITATION) {
-                    connection_to_server_time++;
+                if (timesOfConnections <= Limitation.MAX_LOST_CONNECTION_LIMITATION) {
+                    timesOfConnections++;
                     ctx.writeAndFlush(new Ping("ping server after write idle time comes"));
                 }
-
             }
         }
     }

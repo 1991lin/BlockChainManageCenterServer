@@ -1,4 +1,4 @@
-package com.blockchain.manager.controller;
+package com.blockchain.manager.file.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

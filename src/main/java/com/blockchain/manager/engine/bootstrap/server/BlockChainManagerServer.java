@@ -22,14 +22,18 @@ import java.util.concurrent.TimeUnit;
 
 
 @Slf4j
-public class ManagerCenterServer {
+public class BlockChainManagerServer {
 
-    public static void main(String[] arg) {
+    private EventLoopGroup boss = new NioEventLoopGroup();
+    private EventLoopGroup worker = new NioEventLoopGroup();
+    private ServerBootstrap serverBootstrap;
 
-        EventLoopGroup boss = new NioEventLoopGroup();
-        EventLoopGroup worker = new NioEventLoopGroup();
+    public void start() {
 
-        ServerBootstrap serverBootstrap = new ServerBootstrap();
+        boss = new NioEventLoopGroup();
+        worker = new NioEventLoopGroup();
+
+        serverBootstrap = new ServerBootstrap();
 
         serverBootstrap.group(boss, worker)
                 .channel(NioServerSocketChannel.class)
@@ -57,15 +61,10 @@ public class ManagerCenterServer {
             boss.shutdownGracefully();
             worker.shutdownGracefully();
         }
-
-
-
-
-
-
-
-
     }
 
-
+    public static void main(String[] arg) {
+        BlockChainManagerServer blockChainManagerServer = new BlockChainManagerServer();
+        blockChainManagerServer.start();
+    }
 }
