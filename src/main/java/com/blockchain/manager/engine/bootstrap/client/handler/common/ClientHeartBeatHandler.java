@@ -1,7 +1,7 @@
 package com.blockchain.manager.engine.bootstrap.client.handler.common;
 
-import com.blockchain.manager.engine.bootstrap.server.handler.entity.Ping;
-import com.blockchain.manager.engine.constant.Limitation;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
@@ -17,7 +17,7 @@ import java.util.Date;
 @Slf4j
 public class ClientHeartBeatHandler extends ChannelInboundHandlerAdapter {
 
-    private int timesOfConnections = 0;
+    private static final String HEART_BEAT = "ping";
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -38,10 +38,8 @@ public class ClientHeartBeatHandler extends ChannelInboundHandlerAdapter {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             if (((IdleStateEvent) evt).state().equals(IdleState.WRITER_IDLE)) {
-                if (timesOfConnections <= Limitation.MAX_LOST_CONNECTION_LIMITATION) {
-                    timesOfConnections++;
-                    ctx.writeAndFlush(new Ping("ping server after write idle time comes"));
-                }
+                ByteBuf byteBuf = Unpooled.copiedBuffer(HEART_BEAT.getBytes());
+                ctx.channel().writeAndFlush(byteBuf.duplicate());
             }
         }
     }

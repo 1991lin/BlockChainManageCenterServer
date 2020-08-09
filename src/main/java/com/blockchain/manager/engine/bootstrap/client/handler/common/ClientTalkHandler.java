@@ -1,5 +1,6 @@
-package com.blockchain.manager.engine.bootstrap.client.handler.business;
+package com.blockchain.manager.engine.bootstrap.client.handler.common;
 
+import com.blockchain.manager.engine.bootstrap.utils.HandlerMessageConvertor;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -51,11 +52,7 @@ public class ClientTalkHandler implements ChannelInboundHandler {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        //get the message from server side.
-        ByteBuf byteBuf = (ByteBuf) msg;
-        byte[] bytes = new byte[byteBuf.readableBytes()];
-        byteBuf.readBytes(bytes);
-        String responseFromServer = new String(bytes, StandardCharsets.UTF_8);
+        String responseFromServer = HandlerMessageConvertor.getMessageFromByteBuf(msg);
         log.info("Response from server side is : " + responseFromServer);
 
     }

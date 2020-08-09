@@ -1,4 +1,4 @@
-package com.blockchain.manager.engine.bootstrap.server.handler;
+package com.blockchain.manager.engine.bootstrap.server.handler.common;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -42,7 +42,7 @@ public class ServerTalkHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        getMessageFromClient(msg);
+        getMessageFromClient(ctx, msg);
         sentResponse(ctx);
     }
 
@@ -52,12 +52,12 @@ public class ServerTalkHandler extends ChannelInboundHandlerAdapter {
         ctx.write(res);
     }
 
-    private void getMessageFromClient(Object msg) throws UnsupportedEncodingException {
+    private void getMessageFromClient(ChannelHandlerContext ctx, Object msg) throws UnsupportedEncodingException {
         ByteBuf byteBuf = (ByteBuf) msg;
         byte[] bytes = new byte[byteBuf.readableBytes()];
         byteBuf.readBytes(bytes);
         String messageBody = new String(bytes, StandardCharsets.UTF_8);
-        log.info("Message from client is : " + messageBody);
+        log.info("Message from client : " + ctx.channel().remoteAddress() + ", the message is : " + messageBody);
     }
 
     @Override

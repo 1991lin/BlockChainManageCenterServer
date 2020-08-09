@@ -31,7 +31,7 @@ public class ServerHeartBeatHandler extends ChannelInboundHandlerAdapter {
                 CONNECTION_LOST_TIMES++;
                 log.info("No message from Client: " + ctx.channel().remoteAddress());
                 if (CONNECTION_LOST_TIMES > MAX_LOST_CONNECTION_LIMITATION) {
-                    log.info("Closing this connection of Client:" + ctx.channel().remoteAddress());
+                    log.info("No heartbeat from Client:" + ctx.channel().remoteAddress() + ", remove this client connection.");
                     ctx.channel().close();
                 }
             }

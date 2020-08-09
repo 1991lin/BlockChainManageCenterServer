@@ -1,6 +1,6 @@
 package com.blockchain.manager.engine.bootstrap.client.handler.common;
 
-import com.blockchain.manager.engine.bootstrap.client.SdkClientServer;
+import com.blockchain.manager.engine.bootstrap.client.Client;
 import com.blockchain.manager.engine.bootstrap.server.handler.strategy.RetryPolicy;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -19,12 +19,12 @@ public class ReConnectHandler extends ChannelInboundHandlerAdapter {
 
     private int retryTimes = 0;
     private RetryPolicy retryPolicy;
-    private SdkClientServer sdkClientServer;
+    private Client client;
 
-    public ReConnectHandler(int retryTimes, RetryPolicy retryPolicy, SdkClientServer sdkClientServer) {
+    public ReConnectHandler(int retryTimes, RetryPolicy retryPolicy, Client client) {
         this.retryTimes = retryTimes;
         this.retryPolicy = retryPolicy;
-        this.sdkClientServer = sdkClientServer;
+        this.client = client;
     }
 
 
@@ -38,18 +38,14 @@ public class ReConnectHandler extends ChannelInboundHandlerAdapter {
 
         boolean allowRetry = getRetryPolicy().allowRetry(retryTimes);
         if (allowRetry) {
-
             long sleepTime = getRetryPolicy().getSleepTime(retryTimes);
             log.info("Waiting for {} and then Trying to connect to server after {} retry", sleepTime, retryTimes);
-
             final EventLoop eventLoop = ctx.channel().eventLoop();
             eventLoop.schedule(() -> {
                 log.info("Reconnecting...");
-                sdkClientServer.connect();
+                client.connect();
             }, sleepTime, TimeUnit.SECONDS);
         }
-
-
     }
 
     public int getRetryTimes() {
@@ -68,11 +64,11 @@ public class ReConnectHandler extends ChannelInboundHandlerAdapter {
         this.retryPolicy = retryPolicy;
     }
 
-    public SdkClientServer getSdkClientServer() {
-        return sdkClientServer;
+    public Client getSdkClientServer() {
+        return client;
     }
 
-    public void setSdkClientServer(SdkClientServer sdkClientServer) {
-        this.sdkClientServer = sdkClientServer;
+    public void setSdkClientServer(Client client) {
+        this.client = client;
     }
 }

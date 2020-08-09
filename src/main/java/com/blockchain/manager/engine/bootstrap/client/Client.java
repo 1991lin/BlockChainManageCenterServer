@@ -1,10 +1,8 @@
 package com.blockchain.manager.engine.bootstrap.client;
 
-import com.blockchain.manager.engine.bootstrap.client.handler.business.ClientTalkHandler;
 import com.blockchain.manager.engine.bootstrap.client.handler.common.ClientHeartBeatHandler;
 import com.blockchain.manager.engine.bootstrap.client.handler.common.ReConnectHandler;
 import com.blockchain.manager.engine.bootstrap.server.handler.strategy.ExponentialBackoffRetryPolicy;
-import com.blockchain.manager.engine.constant.Limitation;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -24,12 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Data
-public class SdkClientServer {
+public class Client {
 
     private Bootstrap bootstrap;
     private EventLoopGroup eventLoopGroup;
 
-    SdkClientServer() {
+    Client() {
         bootstrap = new Bootstrap();
         eventLoopGroup = new NioEventLoopGroup();
     }
@@ -42,11 +40,10 @@ public class SdkClientServer {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast("Ping",
-                                new IdleStateHandler(0, Limitation.WRITE_TIME, Limitation.ALL_IDLE_TIME));
-                        ch.pipeline().addLast(new ReConnectHandler(3, new ExponentialBackoffRetryPolicy(), new SdkClientServer()));
+
+                        ch.pipeline().addLast(new IdleStateHandler(0, 3, 0));
+                        ch.pipeline().addLast(new ReConnectHandler(3, new ExponentialBackoffRetryPolicy(), new Client()));
                         ch.pipeline().addLast(new ClientHeartBeatHandler());
-                        ch.pipeline().addLast(new ClientTalkHandler());
                     }
                 });
         ChannelFuture channelFuture = null;
@@ -60,13 +57,9 @@ public class SdkClientServer {
         }
     }
 
-    public static void main(String[] arg) {
-
-        SdkClientServer sdkClientServer = new SdkClientServer();
-
-        sdkClientServer.connect();
-
-
+    public static void main(String[] arg) throws InterruptedException {
+        Client clientOne = new Client();
+        clientOne.connect();
     }
 
 }

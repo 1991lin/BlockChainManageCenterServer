@@ -1,5 +1,6 @@
 package com.blockchain.manager.server.pojo;
 
+import com.blockchain.manager.client.pojo.ServerStatisticInformation;
 import com.blockchain.manager.status.pojo.ServerStatus;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import lombok.Data;
 @Data
 public class Server {
 
-    private ServerInfo serverInformation;
+    private ServerStatisticInformation serverInformation;
     private ServerStatus serverStatus;
 
 }
