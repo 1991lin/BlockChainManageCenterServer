@@ -1,7 +1,7 @@
 package com.blockchain.manager.engine.bootstrap.client;
 
 import com.blockchain.manager.engine.bootstrap.client.handler.common.ClientHeartBeatHandler;
-import com.blockchain.manager.engine.bootstrap.client.handler.common.ReConnectHandler;
+import com.blockchain.manager.engine.bootstrap.client.handler.common.ConnectionWatchDog;
 import com.blockchain.manager.engine.bootstrap.server.handler.strategy.ExponentialBackoffRetryPolicy;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
@@ -40,9 +40,8 @@ public class Client {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-
-                        ch.pipeline().addLast(new IdleStateHandler(0, 3, 0));
-                        ch.pipeline().addLast(new ReConnectHandler(3, new ExponentialBackoffRetryPolicy(), new Client()));
+                        ch.pipeline().addLast(new ConnectionWatchDog(3, new ExponentialBackoffRetryPolicy(), new Client()));
+                        ch.pipeline().addLast(new IdleStateHandler(0, 8, 0));
                         ch.pipeline().addLast(new ClientHeartBeatHandler());
                     }
                 });
@@ -61,5 +60,4 @@ public class Client {
         Client clientOne = new Client();
         clientOne.connect();
     }
-
 }

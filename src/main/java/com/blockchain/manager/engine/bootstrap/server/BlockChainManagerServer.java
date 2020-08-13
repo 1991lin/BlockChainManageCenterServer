@@ -12,7 +12,9 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -21,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 
 @Slf4j
+@Service
 public class BlockChainManagerServer {
 
     private EventLoopGroup boss;
@@ -28,6 +31,7 @@ public class BlockChainManagerServer {
     private ServerBootstrap serverBootstrap;
 
 
+    @PostConstruct
     public void start() {
         init();
         ChannelFuture channelFuture = null;
@@ -57,7 +61,7 @@ public class BlockChainManagerServer {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ch.pipeline().addLast("ServerIdleStateChannel",
-                                new IdleStateHandler(0, 4, 0, TimeUnit.SECONDS));
+                                new IdleStateHandler(2, 0, 0, TimeUnit.SECONDS));
                         ch.pipeline().addLast(new ServerHeartBeatHandler());
                         ch.pipeline().addLast(new ServerTalkHandler());
                     }

@@ -15,13 +15,13 @@ import java.util.concurrent.TimeUnit;
  **/
 
 @Slf4j
-public class ReConnectHandler extends ChannelInboundHandlerAdapter {
+public class ConnectionWatchDog extends ChannelInboundHandlerAdapter {
 
     private int retryTimes = 0;
     private RetryPolicy retryPolicy;
     private Client client;
 
-    public ReConnectHandler(int retryTimes, RetryPolicy retryPolicy, Client client) {
+    public ConnectionWatchDog(int retryTimes, RetryPolicy retryPolicy, Client client) {
         this.retryTimes = retryTimes;
         this.retryPolicy = retryPolicy;
         this.client = client;
@@ -46,6 +46,7 @@ public class ReConnectHandler extends ChannelInboundHandlerAdapter {
                 client.connect();
             }, sleepTime, TimeUnit.SECONDS);
         }
+        ctx.fireChannelInactive();
     }
 
     public int getRetryTimes() {

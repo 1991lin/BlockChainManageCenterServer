@@ -19,7 +19,7 @@ import static com.blockchain.manager.engine.constant.Limitation.MAX_LOST_CONNECT
 @Slf4j
 public class ServerHeartBeatHandler extends ChannelInboundHandlerAdapter {
 
-    private int CONNECTION_LOST_TIMES = 0;
+    private int connectionCount = 0;
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
@@ -28,9 +28,9 @@ public class ServerHeartBeatHandler extends ChannelInboundHandlerAdapter {
              * in the server side, just care about the read
              */
             if (((IdleStateEvent) evt).state() == IdleState.READER_IDLE) {
-                CONNECTION_LOST_TIMES++;
+                connectionCount++;
                 log.info("No message from Client: " + ctx.channel().remoteAddress());
-                if (CONNECTION_LOST_TIMES > MAX_LOST_CONNECTION_LIMITATION) {
+                if (connectionCount > MAX_LOST_CONNECTION_LIMITATION) {
                     log.info("No heartbeat from Client:" + ctx.channel().remoteAddress() + ", remove this client connection.");
                     ctx.channel().close();
                 }
@@ -46,7 +46,7 @@ public class ServerHeartBeatHandler extends ChannelInboundHandlerAdapter {
         byte[] bytes = new byte[byteBuf.readableBytes()];
         byteBuf.readBytes(bytes);
         String message = new String(bytes, StandardCharsets.UTF_8);
-        log.info("Message " + message + " from client : " + ctx.channel().remoteAddress());
+        log.info("Message : " + message + " from client : " + ctx.channel().remoteAddress());
     }
 
     @Override

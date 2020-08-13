@@ -11,7 +11,6 @@ public interface Limitation {
     int ALL_IDLE_TIME = 0;
 
 
-    int MAX_LOST_CONNECTION_LIMITATION = 3;
-    int MAX_GET_CONNECTION_LIMITATION = 3;
+    int MAX_LOST_CONNECTION_LIMITATION = 2;
 
 }

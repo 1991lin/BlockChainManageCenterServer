@@ -1,4 +1,4 @@
-package com.blockchain.manager.entity.sdk;
+package com.blockchain.manager.client.pojo;
 
 import lombok.Data;
 

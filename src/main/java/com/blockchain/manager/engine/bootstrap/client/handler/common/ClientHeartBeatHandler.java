@@ -41,6 +41,8 @@ public class ClientHeartBeatHandler extends ChannelInboundHandlerAdapter {
                 ByteBuf byteBuf = Unpooled.copiedBuffer(HEART_BEAT.getBytes());
                 ctx.channel().writeAndFlush(byteBuf.duplicate());
             }
+        } else {
+            super.userEventTriggered(ctx, evt);
         }
     }
 }
